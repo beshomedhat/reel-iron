@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Upper / Lower Split</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f3f5;--card:#fff;--tx:#15171c;--mu:#6a7280;--ac:#e5173f;--on:#fff;--bd:#e2e4e9;--soft:rgba(229,23,63,.09);--glow:rgba(229,23,63,.25);color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b0d10;--card:#14171c;--tx:#eef0f4;--mu:#8b93a1;--ac:#c6ff3d;--on:#0b0d10;--bd:#232830;--soft:rgba(198,255,61,.1);--glow:rgba(198,255,61,.22);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0b0d10;--card:#14171c;--tx:#eef0f4;--mu:#8b93a1;--ac:#c6ff3d;--on:#0b0d10;--bd:#232830;--soft:rgba(198,255,61,.1);--glow:rgba(198,255,61,.22);color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:Inter,system-ui,sans-serif;line-height:1.55;background-image:radial-gradient(600px 300px at 90% -5%,var(--glow),transparent)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+.hd{max-width:720px;margin:auto;padding:22px 16px 6px}
+.hd h1{margin:0;font:800 2.4rem/1 "Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:.02em}
+.hd h1 span{color:var(--ac)}
+.hd p{margin:6px 0 0;color:var(--mu);font-size:.85rem}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--bg);display:flex;gap:8px;overflow-x:auto;padding:12px 16px;max-width:720px;margin:auto;scrollbar-width:none}
+nav button{flex:none;border:1px solid var(--bd);background:var(--card);color:var(--mu);font:700 .95rem "Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:.06em;padding:7px 16px;border-radius:8px;cursor:pointer;transition:.15s}
+nav button.on{background:var(--ac);border-color:var(--ac);color:var(--on);box-shadow:0 0 18px var(--glow)}
+main{max-width:720px;margin:auto;padding:2px 16px 48px}
+h2{font:700 1.5rem "Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:.03em;margin:14px 0 10px}
+h2 small{display:block;color:var(--ac);font-size:.8rem;letter-spacing:.14em}
+.seg{display:flex;gap:6px;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:4px;margin:0 0 14px}
+.seg button{flex:1;border:0;background:none;color:var(--mu);font:700 .95rem "Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:.06em;padding:9px;border-radius:9px;cursor:pointer}
+.seg button.on{background:var(--ac);color:var(--on)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px;margin-bottom:12px;position:relative;overflow:hidden}
+.card.ex{padding-left:58px}
+.num{position:absolute;left:0;top:0;bottom:0;width:44px;display:flex;align-items:center;justify-content:center;font:800 1.7rem "Barlow Condensed",sans-serif;color:var(--ac);background:var(--soft);border-right:1px solid var(--bd)}
+.card h3{margin:0 0 6px;font:700 1.2rem "Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:.03em}
+.card ul{margin:0;padding:0 0 0 18px}.card li{margin:5px 0;font-size:.92rem}
+.card li::marker{color:var(--ac)}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.nm{color:var(--tx);font:700 1.25rem/1.15 "Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:.02em;text-decoration:none}
+.nm::after{content:" ▶";color:var(--ac);font-size:.65rem;vertical-align:middle}
+.nm:hover{color:var(--ac)}
+.sets{display:inline-block;background:var(--soft);color:var(--ac);font:700 .85rem "Barlow Condensed",sans-serif;letter-spacing:.08em;padding:1px 10px;border-radius:6px;margin:5px 0 2px}
+.inf{flex:none;width:32px;height:32px;border-radius:50%;border:1px solid var(--ac);background:none;color:var(--ac);font:italic 700 1rem Georgia,serif;cursor:pointer;transition:.15s}
+.inf:hover{background:var(--ac);color:var(--on)}
+.info{border-top:1px dashed var(--bd);margin-top:10px;padding-top:10px;font-size:.9rem}
+.info[hidden]{display:none}
+.info svg{width:100%;max-width:300px;display:block;margin:8px auto 0}
+.tg{margin-top:8px;font-size:.78rem;color:var(--mu);text-transform:uppercase;letter-spacing:.08em}.tg b{color:var(--ac)}
+.in{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.in input{width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);font:500 .9rem Inter,sans-serif}
+.in input:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px var(--soft)}
+.bd{fill:var(--bd)}.m{fill:var(--mu);opacity:.12}.m.on{fill:var(--ac);opacity:1;filter:drop-shadow(0 0 3px var(--ac))}
+svg text{fill:var(--mu);font-size:7px;font-family:Inter,sans-serif;text-anchor:middle;letter-spacing:.1em}
+@media(max-width:420px){.card.ex{padding-left:50px}.num{width:36px}}
+</style>
+</head>
+<body>
+<div class="hd"><h1>Upper <span>/</span> Lower</h1><p>4-day split · your weights and reps are saved on this device</p></div>
+<nav id="nav"></nav>
+<main id="main"></main>
+<script>
+const $=s=>document.querySelector(s);
+const st={g(k){try{return localStorage.getItem(k)||""}catch(e){return ""}},s(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const MN={chest:"Chest",shoulders:"Shoulders",rear:"Rear delts",biceps:"Biceps",triceps:"Triceps",abs:"Abs",quads:"Quads",traps:"Traps & upper back",lats:"Lats",lowback:"Lower back",glutes:"Glutes",hams:"Hamstrings",calves:"Calves"};
+const E=(k,v,cx,cy,rx,ry)=>[k,v,`<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}"/>`];
+const SH=[E("shoulders","f",30,26,6,6),E("shoulders","f",70,26,6,6),E("chest","f",42,35,9,6),E("chest","f",58,35,9,6),E("biceps","f",25,42,4,8),E("biceps","f",75,42,4,8),["abs","f",'<rect x="44" y="44" width="12" height="22" rx="4"/>'],E("quads","f",41,92,7,16),E("quads","f",59,92,7,16),
+E("traps","b",50,26,11,6),E("rear","b",30,26,6,6),E("rear","b",70,26,6,6),E("lats","b",40,44,8,10),E("lats","b",60,44,8,10),E("triceps","b",25,42,4,8),E("triceps","b",75,42,4,8),["lowback","b",'<rect x="44" y="56" width="12" height="12" rx="3"/>'],E("glutes","b",42,77,8,6),E("glutes","b",58,77,8,6),E("hams","b",41,96,7,13),E("hams","b",59,96,7,13),E("calves","b",41,115,5,8),E("calves","b",59,115,5,8)];
+function fig(ms){
+ const body=`<circle cx="50" cy="10" r="7"/><rect x="32" y="19" width="36" height="52" rx="12"/><rect x="20" y="22" width="11" height="42" rx="5"/><rect x="69" y="22" width="11" height="42" rx="5"/><rect x="34" y="72" width="15" height="54" rx="6"/><rect x="51" y="72" width="15" height="54" rx="6"/>`;
+ const mk=v=>SH.filter(x=>x[1]==v).map(x=>x[2].replace("/>",` class="m ${ms.includes(x[0])?"on":""}"/>`)).join("");
+ return `<svg viewBox="0 0 210 140"><g class="bd">${body}</g>${mk("f")}<g transform="translate(110 0)"><g class="bd">${body}</g>${mk("b")}</g><text x="50" y="136">FRONT</text><text x="160" y="136">BACK</text></svg>`;
+}
+const X=(n,s,m,d,no)=>({n,s,m,d,no});
+const D1=[X("Dumbbell Bench Press","3 × 8–12",["chest","shoulders","triceps"],"The main chest builder. Lower the dumbbells slowly to chest level and press up without locking the elbows hard."),
+X("Lat Pulldown","3 × 8–12",["lats","biceps"],"Pull the bar to your upper chest, driving with your elbows rather than your hands. Builds back width."),
+X("Incline Dumbbell Press (30°)","3 × 8–12",["chest","shoulders","triceps"],"Targets the upper chest. Keep the bench at about 30° so the shoulders don’t take over."),
+X("Chest-Supported T-Bar Row","3 × 10–12",["lats","traps","rear","biceps"],"Brace your chest on the pad and pull the elbows back. Hits the mid-back with no lower-back stress."),
+X("Dumbbell Lateral Raise","3 × 12–15",["shoulders"],"Raise the dumbbells out to shoulder height with control and no swinging. Adds shoulder width."),
+X("Triceps Rope Pushdown","2 × 10–15",["triceps"],"Pin your elbows to your sides, fully extend and spread the rope at the bottom."),
+X("Dumbbell Biceps Curl","2 × 10–15",["biceps"],"Curl without swinging your body and lower slowly through the full range.")];
+const D2=[X("Barbell Squat","3 × 8–12",["quads","glutes","hams","abs"],"Descend until your thighs are parallel to the floor, back neutral, knees tracking over your toes. The king of leg exercises."),
+X("Romanian Deadlift","3 × 8–12",["hams","glutes","lowback"],"Push your hips back with a soft knee bend and keep the bar close to your legs. You should feel a deep hamstring stretch."),
+X("Seated Leg Curl","3 × 10–15",["hams"],"Curl the pad down and back under control, then return slowly. Isolates the hamstrings."),
+X("Standing Calf Raise","3 × 12–20",["calves"],"Rise onto your toes as high as possible, then lower to a full stretch. No bouncing."),
+X("Plank","3 × 30–60 sec",["abs"],"Hold a straight line from head to heels. Squeeze your abs and glutes and don’t let the hips sag.")];
+const D3=[X("Dumbbell Shoulder Press","3 × 8–12",["shoulders","triceps"],"Press overhead and lower to ear level. The main shoulder mass builder."),
+X("Chest-Supported Row","3 × 8–12",["lats","traps","rear","biceps"],"Chest on the pad, row toward your waist and squeeze your shoulder blades together."),
+X("Machine Chest Press","3 × 8–12",["chest","triceps","shoulders"],"A stable, safe path for the chest. Press out and squeeze at the end."),
+X("Neutral-Grip Lat Pulldown","3 × 10–12",["lats","biceps"],"The neutral grip lets you reach a deeper lat contraction and is kinder to the shoulders."),
+X("Reverse Pec Deck","2 × 12–15",["rear","traps"],"Open your arms backward with control. Strengthens the rear delts and improves posture."),
+X("Incline Dumbbell Curl","2 × 10–15",["biceps"],"The incline stretches the biceps more. Lower slowly into the stretch."),
+X("Overhead Cable Triceps Extension","2 × 10–15",["triceps"],"Arms overhead trains the long head, the biggest part of the triceps.")];
+const D4=[X("Bulgarian Split Squat","3 × 8–10 / leg",["quads","glutes"],"Rear foot on a bench, front foot forward. Descend straight down. Tough, but great for quads and glutes."),
+X("Hip Thrust","3 × 8–12",["glutes","hams"],"Upper back on the bench, drive your hips up and squeeze the glutes for a second at the top."),
+X("Leg Extension","2 × 12–15",["quads"],"Fully extend the knees, squeeze the quads, then lower slowly."),
+X("Lying Leg Curl","2 × 10–15",["hams"],"Curl the pad up without lifting your hips and lower with control."),
+X("Seated Calf Raise","3 × 12–20",["calves"],"Bent-knee position hits the soleus, the deeper calf muscle. Full range, slow tempo."),
+X("Cable Crunch","3 × 12–15",["abs"],"Kneel and curl your spine down with your abs, not your arms. One of the best ab-growth moves.")];
+const CORE=[X("Hanging Knee Raise","3 × 10–15",["abs"],"Hang from a bar and raise your knees to your chest with control, no swinging. Hits the lower abs."),
+X("Ab Wheel Rollout","3 × 8–12",["abs","lowback"],"Roll out with your abs braced and back flat, then pull back using your abs."),
+X("Dead Bug","3 × 8 / side",["abs"],"On your back, lower opposite arm and leg slowly while your lower back stays glued to the floor."),
+X("Side Plank","2 × 30 sec / side",["abs"],"Prop up on one elbow in a straight line. Strengthens the obliques."),
+X("Reverse Crunch","3 × 12–15",["abs"],"Curl your hips off the floor toward your chest instead of lifting your shoulders. Lower abs focus.")];
+const FLEX=[X("Hip Flexor Stretch","2 × 30 sec / leg",["quads"],"Kneel on one knee and push the hips forward until you feel a stretch at the front of the hip. Great if you sit a lot.",1),
+X("Seated Hamstring Stretch","2 × 30 sec",["hams"],"Sit with one leg straight and hinge forward with a flat back toward your toes.",1),
+X("Pigeon Pose","30 sec / side",["glutes"],"Opens the hips and glutes. Breathe deeply and avoid pressure on the knee.",1),
+X("Cat Cow","10 reps",["lowback","abs"],"On all fours, round and arch your spine slowly with your breathing. Mobilizes the spine.",1),
+X("Doorway Chest Stretch","2 × 30 sec",["chest","shoulders"],"Forearm on a door frame, lean forward until you feel a chest stretch.",1),
+X("Thoracic Rotation","8 / side",["traps","lowback"],"On all fours with a hand behind your head, rotate the elbow up. Improves upper-back mobility.",1),
+X("Child’s Pose","45 sec",["lats","lowback"],"Sit back on your heels and reach your arms forward. Relaxes the back and lats.",1)];
+const WU={up:["5 min light cardio (bike, rower or incline walk)","Arm circles: 2 × 10 each direction","Band pull-aparts (or light rear-delt flyes): 2 × 15","Scap push-ups: 2 × 10","First lift: warm-up set at 50% × 10, then 70% × 5"],
+low:["5 min bike or easy walk","Leg swings: 10 each leg, forward and sideways","Bodyweight squat: 2 × 10 (slow)","Glute bridge: 2 × 12","World’s greatest stretch: 5 per side","First lift: warm-up set at 50% × 10, then 70% × 5"]};
+const CARDIO=`<div class="card"><h3>🏃 Cardio · 2× per week</h3><ul><li>15–25 minutes per session.</li><li>Best on a rest day or after a lower-body session (Day 2 or 4), not before leg day.</li><li>Pick incline walking, cycling or the elliptical at a pace where talking is hard but possible.</li><li>Optional: once a week, swap in 8 rounds of 30 sec fast / 60 sec easy.</li></ul></div>`;
+const T=[{id:"d1",t:"Day 1",sub:"Upper A",w:"up",ex:D1},{id:"d2",t:"Day 2",sub:"Lower A",w:"low",ex:D2,c:1},{id:"d3",t:"Day 3",sub:"Upper B",w:"up",ex:D3},{id:"d4",t:"Day 4",sub:"Lower B",w:"low",ex:D4,c:1},{id:"core",t:"Core + Mobility"},{id:"six",t:"Six-Pack"}];
+const yt=n=>"https://www.youtube.com/results?search_query="+encodeURIComponent(n+" exercise proper form");
+function exCard(id,i,e){
+ const k=`fit:${id}:${i}`;
+ const inputs=e.no?"":`<div class="in"><input inputmode="decimal" placeholder="Last weight (kg)" data-k="${k}:w" value="${st.g(k+":w")}"><input inputmode="numeric" placeholder="Reps" data-k="${k}:r" value="${st.g(k+":r")}"></div>`;
+ return `<div class="card ex"><div class="num">${i+1}</div><div class="top"><a class="nm" href="${yt(e.n)}" target="_blank" rel="noopener">${e.n}</a><button class="inf" data-i aria-label="Info">i</button></div><span class="sets">${e.s}</span><div class="info" hidden><div>${e.d}</div><div class="tg">Target: <b>${e.m.map(x=>MN[x]).join(" · ")}</b></div>${fig(e.m)}</div>${inputs}</div>`;
+}
+const list=(id,a)=>a.map((e,i)=>exCard(id,i,e)).join("");
+let tab=st.g("fit:tab")||"d1",seg=st.g("fit:seg")||"ex";
+function render(){
+ $("#nav").innerHTML=T.map(x=>`<button data-t="${x.id}" class="${x.id==tab?"on":""}">${x.t}</button>`).join("");
+ const x=T.find(v=>v.id==tab)||T[0];let h="";
+ if(x.ex){
+  h=`<h2><small>${x.t}</small>${x.sub}</h2><div class="seg"><button data-s="wu" class="${seg=="wu"?"on":""}">🔥 Warm-up</button><button data-s="ex" class="${seg!="wu"?"on":""}">🏋️ Workout</button></div>`;
+  if(seg=="wu")h+=`<div class="card"><h3>${x.w=="up"?"Upper-body":"Lower-body"} warm-up · 5–8 min + ramp-up sets</h3><ul>${WU[x.w].map(l=>`<li>${l}</li>`).join("")}</ul></div>`;
+  else{h+=list(x.id,x.ex);
+   h+=`<div class="card"><h3>⏱ Training rules</h3><ul><li>Rest 2–3 min on compounds, 60–90 sec on isolation lifts.</li><li>Leave 1–3 reps in reserve on every set.</li><li>Add weight once you hit the top of the rep range on all sets with clean form.</li></ul></div>`;
+   h+=x.c?CARDIO:`<div class="card"><h3>🏃 Cardio</h3>No cardio today. Do it twice a week after leg day or on a rest day (see the Six-Pack tab). After lifting, finish with 10–15 min of Core + Mobility.</div>`}
+ }else if(x.id=="core")h=`<h2><small>After the gym · 8–10 min</small>Core</h2>${list("core",CORE)}<h2><small>5–8 min</small>Mobility</h2>${list("flex",FLEX)}`;
+ else h=`<h2><small>Abs are made in the kitchen</small>Six-Pack Plan</h2><div class="card"><h3>What actually works</h3><ul><li><b>Body fat:</b> roughly 10–14% for clearly visible abs.</li><li><b>Calorie deficit:</b> 300–500 kcal under maintenance. Don’t cut harder, you’ll lose muscle.</li><li><b>Protein:</b> 1.6–2.2 g per kg of body weight daily.</li><li><b>Steps:</b> 8,000–10,000 a day. It burns more than you think.</li><li><b>Sleep:</b> 7–9 hours. Poor sleep raises hunger and fat storage.</li><li><b>No spot reduction:</b> ab exercises alone won’t burn belly fat.</li><li><b>Train abs:</b> at least 3× per week and progress the difficulty (see Core + Mobility).</li><li><b>Cut back on:</b> sugary drinks, fried food and juice.</li><li><b>Be patient:</b> usually 3–6 months depending on your starting point.</li></ul></div>${CARDIO}`;
+ $("#main").innerHTML=h;
+}
+document.addEventListener("click",e=>{
+ const t=e.target.closest("[data-t]"),s=e.target.closest("[data-s]"),i=e.target.closest("[data-i]");
+ if(t){tab=t.dataset.t;st.s("fit:tab",tab);render();scrollTo(0,0)}
+ else if(s){seg=s.dataset.s;st.s("fit:seg",seg);render()}
+ else if(i){const n=i.closest(".card").querySelector(".info");n.hidden=!n.hidden}
+});
+document.addEventListener("input",e=>{if(e.target.dataset.k)st.s(e.target.dataset.k,e.target.value)});
+render();
+</script>
+</body>
+</html>
